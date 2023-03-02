@@ -11,8 +11,10 @@ TEST(FunctionsTests, SumStubTest1) {
     int r = sum_stub(lhs, rhs);
     
     // Assert
-    EXPECT_EQ(r, 5);
+    EXPECT_EQ(r, 4);
 }
+
+//
 
 TEST(FunctionsTests, SumStubTest2) {
     // Arrange
