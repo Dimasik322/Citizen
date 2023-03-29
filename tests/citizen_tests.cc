@@ -82,7 +82,7 @@ TEST(CitizenTests, CitizenTest9) {
     EXPECT_EQ(c1.get_payment(), 61069.92f);
 }
 
-TEST(CitizenTests, CitizenTest10)
+TEST(CitizenTests, CitizenT1est10)
 {
     setlocale(LC_ALL, "ru");
 
