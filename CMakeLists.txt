@@ -31,3 +31,8 @@ FetchContent_MakeAvailable(googletest)
 add_executable(citizen_tests "tests/citizen_tests.cc")
 target_link_libraries(citizen_tests citizen GTest::gtest_main)
 
+# Ну и мою менюшку тоже объявить надо
+add_executable(app "app/app.cc")
+target_link_libraries(app citizen GTest::gtest_main)
+
+
