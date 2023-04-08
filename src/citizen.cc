@@ -1,27 +1,13 @@
 #include <citizen/citizen.h>
 
-#include <exception>
 #include <stdexcept>
-#include <string.h>
 #include <iostream>
 
+using namespace std;
 using namespace CitizenNamespace;
 
-Citizen::Citizen()
-{
-	type = Kid; 
-	Name = "";
-	Organization = "";
-	Number = 0;
-	LargeFamily = false;
-	AveRating = 0;
-	SNILS = 0;
-	Exp = 0;
-	MROT = 0;
-}
-
 void Citizen::set_type(Type type) {
-	this->type = type;
+	this->_type = type;
 }
 
 void Citizen::set_name(string name)
@@ -60,216 +46,228 @@ void Citizen::set_payment(float payment) {
 	this->Payment = payment;
 }
 
-void Citizen::set_mrot(int mrot) {
-	this->MROT = mrot;
+
+
+Type Citizen::get_type() const {
+	return _type;
 }
 
-
-Type Citizen::get_type() {
-	return type;
- }
-
-string Citizen::get_name() {
+string Citizen::get_name() const {
 	return Name;
 }
 
-string Citizen::get_org() {
+string Citizen::get_org() const {
 	return Organization;
 }
 
-int Citizen::get_number() {
+int Citizen::get_number() const {
 	return Number;
 }
 
-bool Citizen::get_family() {
+bool Citizen::get_family() const {
 	return LargeFamily;
 }
 
-float Citizen::get_rating() {
+float Citizen::get_rating() const {
 	return AveRating;
 }
 
-int Citizen::get_snils() {
+int Citizen::get_snils() const {
 	return SNILS;
 }
 
-int Citizen::get_exp() {
+int Citizen::get_exp() const {
 	return Exp;
 }
 
-float Citizen::get_payment() {
+float Citizen::get_payment() const {
 	return Payment;
 }
 
-int Citizen::get_mrot() {
-	return MROT;
-}
 
-Citizen::Citizen(Type _type, string name, string org, int number, bool lf) {
-	if (_type != Kid) {
+Citizen::Citizen(Type type, string name, string org, int number, bool lf) {
+	if (type != Kid) {
 		throw std::runtime_error("Wrong type of citizen");
 	}
-	type = _type;
+	_type = type;
 	Name = name;
 	Organization = org;
 	Number = number;
 	LargeFamily = lf;
 }
 
-Citizen::Citizen(Type _type, string name, string org, int number, float ar) {
-	if (_type != Student) {
+Citizen::Citizen(Type type, string name, string org, int number, float ar) {
+	if (type != Student) {
 		throw std::runtime_error("Wrong type of citizen");
 	}
-	type = _type;
+	_type = type;
 	Name = name;
 	Organization = org;
 	Number = number;
 	AveRating = ar;
 }
 
-Citizen::Citizen(Type _type, string name, int snils, int exp) {
-	if (_type != Oldman) {
+Citizen::Citizen(Type type, string name, int snils, int exp) {
+	if (type != Oldman) {
 		throw std::runtime_error("Wrong type of citizen");
 	}
-	type = _type;
+	_type = type;
 	Name = name;
 	SNILS = snils;
 	Exp = exp;
 }
 
-void Citizen::calculate_payment() {
-	switch (type) {
+Citizen::Citizen(Type type, string name, float payment) :_type(type), Name(name), Payment(payment) {};
+
+CitizenPtr Citizen::create_kid(string name, string org, int number, bool lf) {
+	return new Citizen(Type::Kid, name, org, number, lf);
+}
+
+CitizenPtr Citizen::create_student(string name, string org, int number, float ar) {
+	return new Citizen(Type::Student, name, org, number, ar);
+}
+
+CitizenPtr Citizen::create_oldman(string name, int snils, int exp) {
+	return new Citizen(Type::Oldman, name, snils, exp);
+}
+
+float Citizen::calculate_payment() const {
+	float value = 0;
+	switch (_type) {
 	case Kid:
-		if ((this->LargeFamily) == true) {
-			this->Payment = (0.5 * get_mrot());
-		}
+		if ((LargeFamily) == true) {
+			value = (0.5 * MROT);
+			}
 		else {
-			this->Payment = 0;
+			value = 0;
 		}
+		return value;
 		break;
 	case Student:
-		if ((this->AveRating) < 3.5) {
-			this->Payment = 0;
+		if ((AveRating) < 3.5) {
+			value = 0;
 		}
 		else {
-			this->Payment = ((0.5 + 0.2 * ((this->AveRating) - 3.5)) * get_mrot());
+			value = ((0.5 + 0.2 * ((AveRating)-3.5)) * MROT);
 		}
+		return value;
 		break;
 	case Oldman:
-		if (this->Exp < 5) {
-			this->Payment = 0;
+		if (Exp < 5) {
+			value = 0;
 		}
-		else if (this->Exp > 30) {
-			this->Payment = 5 * MROT;
+		else if (Exp > 30) {
+			value = 5 * MROT;
 		}
 		else {
-			this->Payment = (1 + 0.12 * ((this->Exp) - 5)) * get_mrot();
+			value = (1 + 0.12 * (Exp - 5)) * MROT;
 		}
+		return value;
 		break;
+	default:
+		throw runtime_error("[Function::compute_value] Invalid function type.");
 	}
-};
+}
+////CitizenPtr Citizen::calculate_payment(){
+//	float value = 0;
+//	switch (_type) {
+//	case Kid:
+//		if ((LargeFamily) == true) {
+//			value = (0.5 * MROT);
+//		}
+//		else {
+//			value = 0;
+//		}
+//		return new Citizen(Type::Kid, Name, value);
+//		break;
+//	case Student:
+//		if ((AveRating) < 3.5) {
+//			value = 0;
+//		}
+//		else {
+//			value = ((0.5 + 0.2 * ((AveRating)-3.5)) * MROT);
+//		}
+//		return new Citizen(Type::Student, Name, value);
+//		break;
+//	case Oldman:
+//		if (Exp < 5) {
+//			value = 0;
+//		}
+//		else if (Exp > 30) {
+//			value = 5 * MROT;
+//		}
+//		else {
+//			value = (1 + 0.12 * (Exp - 5)) * MROT;
+//		}
+//		return new Citizen(Type::Oldman, Name, value);
+//		break;
+//	}
+//};
+
+CitizenPtr Citizen::clone() const {
+	return new Citizen(_type, Name, Payment);
+}
+
+bool CitizenNamespace::operator==(const Citizen& lhs, const Citizen& rhs) {
+	return
+		lhs.get_type() == rhs.get_type() &&
+		lhs.calculate_payment() == rhs.calculate_payment();
+}
+
+bool CitizenNamespace::operator!=(const Citizen& lhs, const Citizen& rhs) {
+	return !(lhs == rhs);
+}
 
 
 
-CitizenList::CitizenList() {
-	Count = 9;
-	for (int i(0); i <= Count; ++i) {
-		citizens[i] = Citizen();
+CitizenList::CitizenList() : ptr(nullptr), _size(0){ }
+
+CitizenList::CitizenList(const CitizenList& other) : ptr(new CitizenPtr[other._size]), _size(other._size){
+	for (int i = 0; i < _size; ++i) {
+		ptr[i] = other[i]->clone();
 	}
 }
 
-CitizenList::CitizenList(Citizen citizen[], int count) {
-	Count = count;
-	for (int i(0); i < count; ++i) {
-		citizens[i].set_type(citizen[i].get_type());
-		citizens[i].set_name(citizen[i].get_name());
-		citizens[i].set_org(citizen[i].get_org());
-		citizens[i].set_number(citizen[i].get_number());
-		citizens[i].set_family(citizen[i].get_family());
-	}
+CitizenList& CitizenList::operator=(const CitizenList& rhs) {
+	CitizenList copy(rhs);
+	copy.swap(*this);
+	return *this;
 }
 
-CitizenList::CitizenList(Citizen citizen[], int count,float) {
-	Count = count;
-	for (int i(0); i < count; ++i) {
-		citizens[i].set_type(citizen[i].get_type());
-		citizens[i].set_name(citizen[i].get_name());
-		citizens[i].set_org(citizen[i].get_org());
-		citizens[i].set_number(citizen[i].get_number());
-		citizens[i].set_rating(citizen[i].get_rating());
-	}
+int CitizenList::size() const {
+	return _size;
 }
 
-CitizenList::CitizenList(Citizen citizen[], int count, int) {
-	Count = count;
-	for (int i(0); i < count; ++i) {
-		citizens[i].set_type(citizen[i].get_type());
-		citizens[i].set_name(citizen[i].get_name());
-		citizens[i].set_snils(citizen[i].get_snils());
-		citizens[i].set_exp(citizen[i].get_exp());
+CitizenPtr CitizenList::operator[](const int index) const {
+	if (index < 0 || _size <= index) {
+		throw out_of_range("[CitizenList::operator[]] Index is out of range.");
 	}
+
+	return ptr[index];
 }
 
+void CitizenList::add(CitizenPtr const c) {
+	auto new_ptr = new CitizenPtr[_size + 1];
 
-void CitizenList::insert_citizen(int index, Citizen citizen) {
-	if (Count == CAPACITY){
-		throw std::runtime_error("The data array is full.");
+	for (int i = 0; i < _size; ++i) {
+		new_ptr[i] = ptr[i];
 	}
-	if (index < 0 || index >= Count){
-		throw std::runtime_error("Index out of range.");
-	}
-	for (int i = Count - 1; i >= index; --i) { 
-		citizens[i] = citizens[i - 1]; 
-	}
-	citizens[index] = citizen;
-	++Count;
-};
+	new_ptr[_size] = c;
 
-void CitizenList::add_citizen(Citizen citizen) {
-	if (Count == CAPACITY) {
-		throw std::runtime_error("The data array is full.");
-	}
-	citizens[Count] = citizen;
-	++Count;
-};
+	delete[] ptr;
+	ptr = new_ptr;
 
-void CitizenList::delete_citizen(int index)
-{
-	if (Count <= 0)
-	{
-		throw std::runtime_error("List of Citizen is empty.");
-	}
-	if (index > Count) {
-		throw std::runtime_error("Not enough items in container");
-	}
-	for (int i = index; i < Count - 1; ++i)
-	{
-		citizens[i] = citizens[i + 1];
-	}
-	--Count;
+	++_size;
 }
 
-int CitizenList::get_count() {
-	return Count;
-};
-
-void CitizenList::set_count(int count) {
-	Count = count;
-};
-
-Citizen CitizenList::get_citizen(int index) {
-	return citizens[index];
-};
-
-void CitizenList::set_citizen(int index, Citizen c) {
-	citizens[index] = c;
+void CitizenList::swap(CitizenList& other) {
+	std::swap(this->ptr, other.ptr);
+	std::swap(this->_size, other._size);
 }
 
-Citizen& CitizenList::operator[](int index)
-{
-	if (index < 0 || index >= Count)
-	{
-		throw std::runtime_error("Index out of range.");
+CitizenList::~CitizenList() {
+	for (int i = 0; i < _size; ++i) {
+		delete ptr[i];
 	}
-	return citizens[index];
-};
+	delete[] ptr;
+}

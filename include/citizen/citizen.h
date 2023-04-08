@@ -1,13 +1,11 @@
 #pragma once
-#include <string>
+
 #include <stdexcept>
 
 using namespace std;
 
 namespace CitizenNamespace {
-	//const float MROT = 16242;
-	//const int strlenght = 255;
-	const int CAPACITY = 10;
+	const float MROT = 16242;
 
 	enum Type {
 		Kid,
@@ -15,10 +13,14 @@ namespace CitizenNamespace {
 		Oldman
 	};
 
+	class Citizen;
+
+	using CitizenPtr = Citizen*;
+
 	class Citizen {
 
 	private:
-		Type type;
+		Type _type;
 		string Name;
 		string Organization;
 		int Number;
@@ -29,12 +31,10 @@ namespace CitizenNamespace {
 		float Payment;
 
 	public:
-		int MROT;
-
-		Citizen();
 		Citizen(Type type, string Name, string Organization, int Number, bool LargeFamily);
 		Citizen(Type type, string Name, string Organization, int Number, float AveRating);
 		Citizen(Type type, string Name, int SNILS, int Exp);
+		Citizen(Type type, string name, float payment);
 
 		void set_type(Type type);
 		void set_name(string name);
@@ -45,44 +45,50 @@ namespace CitizenNamespace {
 		void set_exp(int exp);
 		void set_snils(int snils);
 		void set_payment(float payment);
-		void set_mrot(int mrot);
 
-		float get_payment();
-		string get_name();
-		string get_org();
-		int get_number();
-		Type get_type();
-		bool get_family();
-		float get_rating();
-		int get_snils();
-		int get_exp();
-		int get_mrot();
+		float get_payment() const;
+		string get_name() const;
+		string get_org() const;
+		int get_number() const;
+		Type get_type() const;
+		bool get_family() const;
+		float get_rating() const;
+		int get_snils() const;
+		int get_exp() const;
 
-		void calculate_payment();
+		static CitizenPtr create_kid(string name, string org, int number, bool lf);
+		static CitizenPtr create_student(string name, string org, int number, float ar);
+		static CitizenPtr create_oldman(string name, int snils, int exp);
+		float calculate_payment() const;
+
+		//static CitizenPtr calculate_payment();
+
+		CitizenPtr clone() const;
 	};
 
+	bool operator==(const Citizen& lhs, const Citizen& rhs);
+	bool operator!=(const Citizen& lhs, const Citizen& rhs);
+
 	class CitizenList {
+
 	private:
-		int Count = 0;
-		Citizen citizens[CAPACITY];
+		CitizenPtr* ptr;
+		int _size;
 
 	public:
 		CitizenList();
-		//CitizenList(const char* name);
-		CitizenList(Citizen citizen[], int count);
-		CitizenList(Citizen citizen[], int count, float);
-		CitizenList(Citizen citizen[], int count, int);
+		CitizenList(const CitizenList& other);
 
-		Citizen get_citizen(int index);
-		int get_count();
-		void set_count(int count);
+		int size() const;
 
-		void set_citizen(int index ,Citizen c);
-		void add_citizen(Citizen c);
-		void insert_citizen(int index, Citizen c);
-		void delete_citizen(int index);
+		CitizenList& operator=(const CitizenList& rhs);
+		CitizenPtr operator[](int index) const;
 
-		Citizen& operator[](int index);
+		void add(CitizenPtr c);
+		void swap(CitizenList& other);
+
+		~CitizenList();
 	};
 
 };
+
