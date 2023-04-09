@@ -1,5 +1,6 @@
 #include <citizen/citizen.h>
 
+#include <iomanip>
 #include <stdexcept>
 #include <iostream>
 
@@ -168,41 +169,6 @@ float Citizen::calculate_payment() const {
 		throw runtime_error("[Function::compute_value] Invalid function type.");
 	}
 }
-////CitizenPtr Citizen::calculate_payment(){
-//	float value = 0;
-//	switch (_type) {
-//	case Kid:
-//		if ((LargeFamily) == true) {
-//			value = (0.5 * MROT);
-//		}
-//		else {
-//			value = 0;
-//		}
-//		return new Citizen(Type::Kid, Name, value);
-//		break;
-//	case Student:
-//		if ((AveRating) < 3.5) {
-//			value = 0;
-//		}
-//		else {
-//			value = ((0.5 + 0.2 * ((AveRating)-3.5)) * MROT);
-//		}
-//		return new Citizen(Type::Student, Name, value);
-//		break;
-//	case Oldman:
-//		if (Exp < 5) {
-//			value = 0;
-//		}
-//		else if (Exp > 30) {
-//			value = 5 * MROT;
-//		}
-//		else {
-//			value = (1 + 0.12 * (Exp - 5)) * MROT;
-//		}
-//		return new Citizen(Type::Oldman, Name, value);
-//		break;
-//	}
-//};
 
 CitizenPtr Citizen::clone() const {
 	return new Citizen(_type, Name, Payment);
@@ -258,6 +224,63 @@ void CitizenList::add(CitizenPtr const c) {
 	ptr = new_ptr;
 
 	++_size;
+}
+
+void CitizenList::insert(CitizenPtr const c, int index) {
+	if (index <0 || index > _size) {
+		throw out_of_range("Index is out of list.");
+	}
+	auto new_ptr = new CitizenPtr[_size + 1];
+
+	for (int i = 0; i < index; ++i) {
+		new_ptr[i] = ptr[i];
+	}
+	for (int i = _size; i > index; --i) {
+		new_ptr[i] = ptr[i-1];
+	}
+	new_ptr[index] = c;
+
+	delete[] ptr;
+	ptr = new_ptr;
+
+	++_size;
+}
+
+void CitizenList::delete_citizen(int index) {
+	if (index < 0 || index >= _size) {
+		throw out_of_range("Index is out of list.");
+	}
+	auto new_ptr = new CitizenPtr[_size - 1];
+
+	for (int i = 0; i < index; ++i) {
+		new_ptr[i] = ptr[i];
+	}
+	for (int i = index; i <_size-1 ; ++i) {
+		new_ptr[i] = ptr[i + 1];
+	}
+
+	delete[] ptr;
+	ptr = new_ptr;
+
+	--_size;
+}
+
+void CitizenList::show() {
+	cout << "Список:" << endl;
+	cout << setiosflags(ios::left) << setw(15) << "Имя" << setw(15) << "Сумма выплаты" << setw(10) << "Статус" << setw(15) << "Другие данные" << endl;
+	for (int i(0); i < _size; ++i) {
+		switch (ptr[i]->get_type()) {
+		case 0:
+			cout << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Школьник" << setw(15) << ptr[i]->get_org() << setw(15) << ptr[i]->get_number() << endl;
+			break;
+		case 1:
+			cout << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Студент" << setw(15) << ptr[i]->get_org() << setw(15) << ptr[i]->get_number() << endl;
+			break;
+		case 2:
+			cout << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Пенсионер" << setw(10) << ptr[i]->get_snils() << endl;
+			break;
+		}
+	}
 }
 
 void CitizenList::swap(CitizenList& other) {

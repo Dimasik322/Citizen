@@ -61,8 +61,6 @@ namespace CitizenNamespace {
 		static CitizenPtr create_oldman(string name, int snils, int exp);
 		float calculate_payment() const;
 
-		//static CitizenPtr calculate_payment();
-
 		CitizenPtr clone() const;
 	};
 
@@ -85,6 +83,9 @@ namespace CitizenNamespace {
 		CitizenPtr operator[](int index) const;
 
 		void add(CitizenPtr c);
+		void insert(CitizenPtr c, int index);
+		void delete_citizen(int index);
+		void show();
 		void swap(CitizenList& other);
 
 		~CitizenList();
