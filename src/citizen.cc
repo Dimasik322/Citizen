@@ -266,18 +266,19 @@ void CitizenList::delete_citizen(int index) {
 }
 
 void CitizenList::show() {
+	setlocale(LC_ALL, "");
 	cout << "Список:" << endl;
-	cout << setiosflags(ios::left) << setw(15) << "Имя" << setw(15) << "Сумма выплаты" << setw(10) << "Статус" << setw(15) << "Другие данные" << endl;
+	cout << "№ " << setiosflags(ios::left) << setw(15) << "Имя" << setw(15) << "Сумма выплаты" << setw(10) << "Статус" << setw(15) << "Другие данные" << endl;
 	for (int i(0); i < _size; ++i) {
 		switch (ptr[i]->get_type()) {
 		case 0:
-			cout << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Школьник" << setw(15) << ptr[i]->get_org() << setw(15) << ptr[i]->get_number() << endl;
+			cout << i << " " << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Школьник" << setw(15) << ptr[i]->get_org() << setw(15) << ptr[i]->get_number() << endl;
 			break;
 		case 1:
-			cout << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Студент" << setw(15) << ptr[i]->get_org() << setw(15) << ptr[i]->get_number() << endl;
+			cout << i << " " << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Студент" << setw(15) << ptr[i]->get_org() << setw(15) << ptr[i]->get_number() << endl;
 			break;
 		case 2:
-			cout << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Пенсионер" << setw(10) << ptr[i]->get_snils() << endl;
+			cout << i << " " << setiosflags(ios::left) << setw(15) << ptr[i]->get_name() << setw(15) << ptr[i]->calculate_payment() << setw(10) << "Пенсионер" << setw(10) << ptr[i]->get_snils() << endl;
 			break;
 		}
 	}
