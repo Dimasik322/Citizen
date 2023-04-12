@@ -48,7 +48,6 @@ void Citizen::set_payment(float payment) {
 }
 
 
-
 Type Citizen::get_type() const {
 	return _type;
 }
@@ -120,6 +119,7 @@ Citizen::Citizen(Type type, string name, int snils, int exp) {
 
 Citizen::Citizen(Type type, string name, float payment) :_type(type), Name(name), Payment(payment) {};
 
+
 CitizenPtr Citizen::create_kid(string name, string org, int number, bool lf) {
 	return new Citizen(Type::Kid, name, org, number, lf);
 }
@@ -174,10 +174,9 @@ CitizenPtr Citizen::clone() const {
 	return new Citizen(_type, Name, Payment);
 }
 
+
 bool CitizenNamespace::operator==(const Citizen& lhs, const Citizen& rhs) {
-	return
-		lhs.get_type() == rhs.get_type() &&
-		lhs.calculate_payment() == rhs.calculate_payment();
+	return ((lhs.get_type() == rhs.get_type()) && (lhs.calculate_payment() == rhs.calculate_payment()));
 }
 
 bool CitizenNamespace::operator!=(const Citizen& lhs, const Citizen& rhs) {
@@ -193,6 +192,7 @@ CitizenList::CitizenList(const CitizenList& other) : ptr(new CitizenPtr[other._s
 		ptr[i] = other[i]->clone();
 	}
 }
+
 
 CitizenList& CitizenList::operator=(const CitizenList& rhs) {
 	CitizenList copy(rhs);
@@ -287,6 +287,27 @@ void CitizenList::show() {
 void CitizenList::swap(CitizenList& other) {
 	std::swap(this->ptr, other.ptr);
 	std::swap(this->_size, other._size);
+}
+
+float CitizenList::max_value() {
+	setlocale(LC_ALL, "");
+	int max_index = -1;
+	float max_value = 0;
+	float value = 0;
+	for (int i = 0; i < _size; ++i) {
+		value = ptr[i]->calculate_payment();
+		if (max_index == -1 || max_value < value) {
+			max_index = i;
+			max_value = value;
+		}
+	}
+	if (max_index == -1) {
+		cout << "—писок пуст, нельз€ найти максимальную выплату" << endl;
+	} 
+	else {
+		cout << "ћаксимальна€ выплата " << max_value << " находитс€ по индексу " << max_index << endl;
+	}
+	return max_value;
 }
 
 CitizenList::~CitizenList() {

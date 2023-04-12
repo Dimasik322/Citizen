@@ -82,11 +82,12 @@ namespace CitizenNamespace {
 		CitizenList& operator=(const CitizenList& rhs);
 		CitizenPtr operator[](int index) const;
 
-		void add(CitizenPtr c);
-		void insert(CitizenPtr c, int index);
+		void add(CitizenPtr const c);
+		void insert(CitizenPtr const c, int index);
 		void delete_citizen(int index);
 		void show();
 		void swap(CitizenList& other);
+		float max_value();
 
 		~CitizenList();
 	};

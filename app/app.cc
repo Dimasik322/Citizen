@@ -33,7 +33,6 @@ int menu2() {
 		int key = get_key();
 		if ((key == 27) || (key == 13) || (key == 49)) return key;
 	}
-
 }
 
 int menu3() {
@@ -73,7 +72,7 @@ void menu_insert_citizen(CitizenList& citizens) {
 		cout << "Ââåäèòå ïåğñîíàëüíûé íîìåğ ó÷åíèêà:" << endl;
 		cin >> num;
 		cout << "Ââåäèòå ñòàòóñ ìíîãîäåòíîñòè ñåìüè: (y|n)" << endl;
-		if (get_key() == 89) {
+		if (get_key() == 121) {
 			lf = true;
 			}
 		c = Citizen::create_kid(name, org, num, lf);
@@ -166,9 +165,6 @@ void menu_delete(CitizenList& citizens) {
 	citizens.delete_citizen(index);
 }
 
-//Citizen menu_max()
-//sort
-//
 
 int main() {
 	setlocale(LC_ALL, "");
@@ -181,7 +177,6 @@ int main() {
 	int exp;
 	bool lf;
 	float payment;
-
 	CitizenList citizens;
 	citizens.add(Citizen::create_student("Äìèòğèé", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
 	citizens.insert(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true), 0);
@@ -195,20 +190,26 @@ int main() {
 			system("cls");
 			citizens.show();
 			int m2 = menu2();
+			if (m2 == 49) {
+				float max = citizens.max_value();
+				if (get_key() == 27) break;
+			}
 			if (m2 == 27) break;
-			while (true) {
-				system("cls");
-				citizens.show();
-				int m3 = menu3();
-				if (m3 == 27) break;
-				if (m3 == 49) {
-					menu_insert_citizen(citizens);
-				}
-				if (m3 == 50) {
-					menu_add_citizen(citizens);
-				}
-				if (m3 == 51) {
-					menu_delete(citizens);
+			if (m2 == 13) {
+				while (true) {
+					system("cls");
+					citizens.show();
+					int m3 = menu3();
+					if (m3 == 27) break;
+					if (m3 == 49) {
+						menu_insert_citizen(citizens);
+					}
+					if (m3 == 50) {
+						menu_add_citizen(citizens);
+					}
+					if (m3 == 51) {
+						menu_delete(citizens);
+					}
 				}
 			}
 		}
