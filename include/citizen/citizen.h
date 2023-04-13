@@ -5,7 +5,8 @@
 using namespace std;
 
 namespace CitizenNamespace {
-	const float MROT = 16242;
+	float MROT = 16242;
+	void set_mrot(float mrot);
 
 	enum Type {
 		Kid,
@@ -64,6 +65,8 @@ namespace CitizenNamespace {
 		CitizenPtr clone() const;
 	};
 
+	void printf(Citizen c);
+
 	bool operator==(const Citizen& lhs, const Citizen& rhs);
 	bool operator!=(const Citizen& lhs, const Citizen& rhs);
 
@@ -85,6 +88,8 @@ namespace CitizenNamespace {
 		void add(CitizenPtr const c);
 		void insert(CitizenPtr const c, int index);
 		void delete_citizen(int index);
+		void replace(CitizenPtr const c, int index);
+
 		void show();
 		void swap(CitizenList& other);
 		float max_value();

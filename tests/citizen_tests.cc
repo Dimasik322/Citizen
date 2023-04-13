@@ -110,3 +110,30 @@ TEST(CitizenTests, CitizenTest14) {
     citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
     EXPECT_EQ(citizens.max_value(), 61069.92f);
 }
+
+TEST(CitizenTests, CitizenTest15) {
+    setlocale(LC_ALL, "ru");
+    const auto c1 = Citizen::create_student("Dmitrii", "люнс тлк ╧38", 3421, 4.5f);
+    EXPECT_EQ(c1->calculate_payment(), 11369.4f);
+    set_mrot(10000);
+    EXPECT_EQ(c1->calculate_payment(), 7000);
+    delete c1;
+}
+
+TEST(CitizenTests, CitizenTest16) {
+    CitizenList citizens;
+    citizens.add(Citizen::create_student("Dmitrii", "люнс тлк ╧38", 3421, 4.5f));
+    citizens.insert(Citizen::create_kid("Ivan", "ланс янь ╧322", 45345, true), 0);
+    citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
+    citizens.replace(Citizen::create_kid("Alex", "ланс янь ╧322", 23433, true), 1);
+    EXPECT_EQ(citizens.size(), 3);
+    set_mrot(16242);
+    EXPECT_EQ(citizens[1]->calculate_payment(), 8121);
+}
+
+TEST(CitizenTests, CitizenTest17) {
+    setlocale(LC_ALL, "ru");
+    Citizen c1 = Citizen(Type::Student, "Dmitrii", "люнс тлк ╧38", 3421, 4.5f);
+    printf(c1);
+    EXPECT_EQ(c1.calculate_payment(), 11369.4f);
+}

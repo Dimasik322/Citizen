@@ -14,7 +14,7 @@ int get_key() {
 
 int menu1() {
 	cout << endl;
-	cout << "Бухгалтерия в Пенсионном Фонде" << endl;
+	cout << "Программа запущена" << endl;
 	cout << endl;
 	cout << "Создать новый массив - Enter" << endl;
 	cout << "Выход - Esc" << endl;
@@ -40,11 +40,68 @@ int menu3() {
 	cout << "Добавить по индексу - 1" << endl;
 	cout << "Добавить в конец массива - 2" << endl;
 	cout << "Удалить по индексу - 3" << endl;
+	cout << "Заменить элемент по индексу - 4" << endl;
 	cout << "Выход Esc" << endl;
 	while (true) {
 		int key = get_key();
-		if ((key==27)|| (key == 49) || (key == 50) || (key == 51) || (key == 37) || (key == 38) || (key == 39) || (key == 40)) return key;
+		if ((key==27)|| (key == 49) || (key == 50) || (key == 51) || (key == 37) || (key == 38) || (key == 39) || (key == 40) || (key==52)) return key;
 	}
+}
+
+void menu_replace(CitizenList& citizens) {
+	setlocale(LC_ALL, "");
+	system("cls");
+	cout << endl;
+	cout << "Введите имя:" << endl;
+	string name;
+	cin >> name;
+	Type type;
+	string org;
+	int num;
+	bool lf = false;
+	float ar;
+	int snils;
+	int exp;
+	Citizen* c = nullptr;
+	int index;
+	cout << "Введите статус объекта: (k|s|o)" << endl;
+	switch (get_key()) {
+	case 107:
+		type = Kid;
+		cout << "Введите название образовательной организации:" << endl;
+		cin >> org;
+		cout << "Введите персональный номер ученика:" << endl;
+		cin >> num;
+		cout << "Введите статус многодетности семьи: (y|n)" << endl;
+		if (get_key() == 89) {
+			lf = true;
+		}
+		c = Citizen::create_kid(name, org, num, lf);
+		break;
+	case 115:
+		type = Student;
+		cout << "Введите название образовательной организации:" << endl;
+		cin >> org;
+		cout << "Введите персональный номер студента:" << endl;
+		cin >> num;
+		cout << "Введите рейтинг студента:" << endl;
+		cin >> ar;
+		c = Citizen::create_student(name, org, num, ar);
+		break;
+	case 111:
+		type = Oldman;
+		cout << "Введите СНИЛС:" << endl;
+		cin >> snils;
+		cout << "Введите стаж работы" << endl;
+		cin >> exp;
+		c = Citizen::create_oldman(name, snils, exp);
+		break;
+	}
+	system("cls");
+	citizens.show();
+	cout << "Введите индекс, по которому вставить новый объект" << endl;
+	cin >> index;
+	citizens.replace(c, index);
 }
 
 void menu_insert_citizen(CitizenList& citizens) {
@@ -177,6 +234,7 @@ int main() {
 	int exp;
 	bool lf;
 	float payment;
+	float mrot;
 	CitizenList citizens;
 	citizens.add(Citizen::create_student("Дмитрий", "МАОУ ФМЛ №38", 3421, 4.5f));
 	citizens.insert(Citizen::create_kid("Ivan", "МБОУ СОШ №322", 45345, true), 0);
@@ -186,6 +244,9 @@ int main() {
 		system("cls");
 		int m1 = menu1();
 		if (m1 == 27) break;
+		cout << "Задайте текущий МРОТ:" << endl;
+		cin >> mrot;
+		set_mrot(mrot);
 		while (true) {
 			system("cls");
 			citizens.show();
@@ -209,6 +270,9 @@ int main() {
 					}
 					if (m3 == 51) {
 						menu_delete(citizens);
+					}
+					if (m3 == 52) {
+						menu_replace(citizens);
 					}
 				}
 			}

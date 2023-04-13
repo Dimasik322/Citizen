@@ -7,6 +7,10 @@
 using namespace std;
 using namespace CitizenNamespace;
 
+void CitizenNamespace::set_mrot(float mrot) {
+	MROT = mrot;
+}
+
 void Citizen::set_type(Type type) {
 	this->_type = type;
 }
@@ -174,6 +178,9 @@ CitizenPtr Citizen::clone() const {
 	return new Citizen(_type, Name, Payment);
 }
 
+void CitizenNamespace::printf(Citizen c) {
+	cout << c.get_type() << " " << c.get_name() << " " << c.calculate_payment() << endl;
+}
 
 bool CitizenNamespace::operator==(const Citizen& lhs, const Citizen& rhs) {
 	return ((lhs.get_type() == rhs.get_type()) && (lhs.calculate_payment() == rhs.calculate_payment()));
@@ -244,6 +251,24 @@ void CitizenList::insert(CitizenPtr const c, int index) {
 	ptr = new_ptr;
 
 	++_size;
+}
+
+void CitizenList::replace(CitizenPtr const c, int index) {
+	if (index < 0 || index >= _size) {
+		throw out_of_range("Index is out of list.");
+	}
+	auto new_ptr = new CitizenPtr[_size];
+
+	for (int i = 0; i < index; ++i) {
+		new_ptr[i] = ptr[i];
+	}
+	for (int i = index; i < _size; ++i) {
+		new_ptr[i] = ptr[i];
+	}
+	new_ptr[index] = c;
+
+	delete[] ptr;
+	ptr = new_ptr;
 }
 
 void CitizenList::delete_citizen(int index) {
