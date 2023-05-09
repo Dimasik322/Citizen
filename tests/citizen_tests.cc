@@ -5,135 +5,170 @@
 using namespace std;
 using namespace CitizenNamespace;
 
-TEST(CitizenTests, CitizenTest1) {
-    setlocale(LC_ALL, "ru");
-    const auto c1 = Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f);
-    EXPECT_EQ(c1->calculate_payment(), 11369.4f);
-    delete c1;
-}
 
-TEST(CitizenTests, CitizenTest2) {
-    setlocale(LC_ALL, "ru");
-    const auto c1 = Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true);
+TEST(CitizenTests, Test1) {
+    const auto c1 = make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true);
+    const auto c2 = make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, false);
+
     EXPECT_EQ(c1->calculate_payment(), 8121);
-    delete c1;
+    EXPECT_EQ(c2->calculate_payment(), 0);
 }
 
-TEST(CitizenTests, CitizenTest3) {
-    setlocale(LC_ALL, "ru");
-    const auto c1 = Citizen::create_oldman("Maxim", 45345, 28);
-    EXPECT_EQ(c1->calculate_payment(), 61069.92f);
-    delete c1;
-}
+TEST(CitizenTests, Test2) {
+    const auto c1 = make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f);
+    const auto c2 = make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 2.5f);
 
-TEST(CitizenTests, CitizenTest4) {
-    setlocale(LC_ALL, "ru");
-    const auto c1 = Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true);
-    const auto c2 = Citizen::create_oldman("Maxim", 45345, 28);
-    EXPECT_EQ(c1 == c2, false);
-    delete c1;
-    delete c2;
-}
-
-TEST(CitizenTests, CitizenTest5) {
-    CitizenList citizens;
-    EXPECT_EQ(citizens.size(), 0);
-}
-
-TEST(CitizenTests, CitizenTest6) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    EXPECT_EQ(citizens.size(), 1);
-}
-
-TEST(CitizenTests, CitizenTest7) {
-    CitizenList citizens;
-    citizens.insert(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f), 0);
-    EXPECT_EQ(citizens.size(), 1);
-}
-
-TEST(CitizenTests, CitizenTest8) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    citizens.delete_citizen(0);
-    EXPECT_EQ(citizens.size(), 0);
-}
-
-TEST(CitizenTests, CitizenTest9) {
-    CitizenList citizens1;
-    CitizenList citizens2;
-    citizens1.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    citizens2.add(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true));
-    citizens2.add(Citizen::create_oldman("Maxim", 45345, 28));
-    citizens2.swap(citizens1);
-    EXPECT_EQ(citizens2.size(), 1);
-}
-
-TEST(CitizenTests, CitizenTest10) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    citizens.add(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true));
-    citizens.add(Citizen::create_oldman("Maxim", 45345, 28));
-    EXPECT_EQ(citizens.size(), 3);
-}
-
-TEST(CitizenTests, CitizenTest11) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    citizens.insert(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true), 0);
-    citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
-    EXPECT_EQ(citizens.size(), 3);
-}
-
-TEST(CitizenTests, CitizenTest12) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    citizens.insert(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true), 0);
-    citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
-    citizens.delete_citizen(1);
-    EXPECT_EQ(citizens.size(), 2);
-}
-
-TEST(CitizenTests, CitizenTest13) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 2.4f));
-    citizens.insert(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true), 0);
-    citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
-    citizens.show();
-    EXPECT_EQ(citizens.size(), 3);
-}
-
-TEST(CitizenTests, CitizenTest14) {
-    CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.8f));
-    citizens.insert(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true), 0);
-    citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
-    EXPECT_EQ(citizens.max_value(), 61069.92f);
-}
-
-TEST(CitizenTests, CitizenTest15) {
-    setlocale(LC_ALL, "ru");
-    const auto c1 = Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f);
     EXPECT_EQ(c1->calculate_payment(), 11369.4f);
-    set_mrot(10000);
-    EXPECT_EQ(c1->calculate_payment(), 7000);
-    delete c1;
+    EXPECT_EQ(c2->calculate_payment(), 0);
 }
 
-TEST(CitizenTests, CitizenTest16) {
+TEST(CitizenTests, Test3) {
+    const auto c1 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 30);
+    const auto c2 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 20);
+    const auto c3 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 4);
+
+    EXPECT_EQ(c1->calculate_payment(), 64968);
+    EXPECT_EQ(c2->calculate_payment(), 45477.6f);
+    EXPECT_EQ(c3->calculate_payment(), 0);
+}
+
+TEST(CitizenTests, Test4) {
+    const auto c1 = make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true);
+    const auto c2 = make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true);
+    const auto c3 = make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, false);
+
+    EXPECT_TRUE(c1->equals(c2));
+    EXPECT_FALSE(c1->equals(c3));
+}
+
+TEST(CitizenTests, Test5) {
+    const auto c1 = make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f);
+    const auto c2 = make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f);
+    const auto c3 = make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 2.5f);
+
+    EXPECT_TRUE(c1->equals(c2));
+    EXPECT_FALSE(c1->equals(c3));
+}
+
+TEST(CitizenTests, Test6) {
+    const auto c1 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 20);
+    const auto c2 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 20);
+    const auto c3 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 4);
+
+    EXPECT_TRUE(c1->equals(c2));
+    EXPECT_FALSE(c1->equals(c3));
+}
+
+TEST(CitizenTests, Test7) {
+    const auto c1 = make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f);
+
+    EXPECT_EQ(c1->get_name(), "Äìèòğèé");
+    EXPECT_EQ(c1->get_org(), "ÌÁÎÓÑÎØ");
+    EXPECT_EQ(c1->get_num(), 12434);
+    EXPECT_EQ(c1->get_rating(), 4.5f);
+}
+
+TEST(CitizenTests, Test8) {
+    const auto c1 = make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true);
+
+    EXPECT_EQ(c1->get_name(), "Äìèòğèé");
+    EXPECT_EQ(c1->get_org(), "ÌÁÎÓÑÎØ");
+    EXPECT_EQ(c1->get_num(), 12434);
+    EXPECT_EQ(c1->get_lf(), true);
+}
+
+TEST(CitizenTests, Test9) {
+    const auto c1 = make_shared<CitizenOldman>("Äìèòğèé", 345346, 20);
+
+    EXPECT_EQ(c1->get_name(), "Äìèòğèé");
+    EXPECT_EQ(c1->get_snils(), 345346);
+    EXPECT_EQ(c1->get_exp(), 20);
+}
+
+
+
+TEST(CitizenListTests, Test1) {
     CitizenList citizens;
-    citizens.add(Citizen::create_student("Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f));
-    citizens.insert(Citizen::create_kid("Ivan", "ÌÁÎÓ ÑÎØ ¹322", 45345, true), 0);
-    citizens.insert(Citizen::create_oldman("Maxim", 45345, 28), 1);
-    citizens.replace(Citizen::create_kid("Alex", "ÌÁÎÓ ÑÎØ ¹322", 23433, true), 1);
-    EXPECT_EQ(citizens.size(), 3);
-    set_mrot(16242);
-    EXPECT_EQ(citizens[1]->calculate_payment(), 8121);
+
+    const auto index = index_of_max_value(citizens);
+
+    ASSERT_EQ(index, -1);
 }
 
-TEST(CitizenTests, CitizenTest17) {
-    setlocale(LC_ALL, "ru");
-    Citizen c1 = Citizen(Type::Student, "Dmitrii", "ÌÀÎÓ ÔÌË ¹38", 3421, 4.5f);
-    printf(c1);
-    EXPECT_EQ(c1.calculate_payment(), 11369.4f);
+TEST(CitizenListTests, Test2) {
+    CitizenList citizens;
+    citizens.add(make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true));
+    citizens.add(make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f));
+    citizens.add(make_shared<CitizenOldman>("Äìèòğèé", 345346, 20));
+
+    const auto index = index_of_max_value(citizens);
+    const auto n = citizens.size();
+
+    ASSERT_EQ(n, 3);
+    ASSERT_EQ(index, 2);
 }
+
+TEST(CitizenListTests, Test3) {
+    CitizenList citizens;
+    citizens.add(make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true));
+    citizens.add(make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f));
+    citizens.insert(make_shared<CitizenOldman>("Äìèòğèé", 345346, 20), 1);
+
+    const auto index = index_of_max_value(citizens);
+    const auto n = citizens.size();
+
+    ASSERT_EQ(n, 3);
+    ASSERT_EQ(index, 1);
+
+}
+
+TEST(CitizenListTests, Test4) {
+    CitizenList citizens;
+    citizens.add(make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true));
+    citizens.add(make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f));
+    citizens.set(make_shared<CitizenOldman>("Äìèòğèé", 345346, 20), 1);
+
+    const auto index = index_of_max_value(citizens);
+    const auto n = citizens.size();
+
+    ASSERT_EQ(n, 2);
+    ASSERT_EQ(index, 1);
+}
+
+TEST(CitizenListTests, Test5) {
+    CitizenList citizens;
+    citizens.add(make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true));
+    citizens.add(make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f));
+    citizens.remove(1);
+
+    const auto n = citizens.size();
+
+    ASSERT_EQ(n, 1);
+}
+
+TEST(CitizenListTests, Test6) {
+    CitizenList citizens;
+    citizens.add(make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true));
+    citizens.add(make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f));
+    citizens.add(make_shared<CitizenOldman>("Äìèòğèé", 345346, 20));
+
+    CitizenList citizens_1;
+    citizens_1 = citizens;
+
+    const auto n = citizens_1.size();
+
+    ASSERT_EQ(n, 3);
+}
+
+TEST(CitizenListTests, Test7) {
+    CitizenList citizens;
+    citizens.add(make_shared<CitizenKid>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, true));
+    citizens.add(make_shared<CitizenStudent>("Äìèòğèé", "ÌÁÎÓÑÎØ", 12434, 4.5f));
+    citizens.add(make_shared<CitizenOldman>("Äìèòğèé", 345346, 20));
+
+    citizens.show();
+}
+
+
+
+

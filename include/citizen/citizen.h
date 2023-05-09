@@ -1,101 +1,116 @@
 #pragma once
 
 #include <stdexcept>
-
-using namespace std;
+#include <memory>
+#include <vector>
 
 namespace CitizenNamespace {
 	float MROT = 16242;
 	void set_mrot(float mrot);
 
-	enum Type {
-		Kid,
-		Student,
-		Oldman
-	};
-
 	class Citizen;
 
-	using CitizenPtr = Citizen*;
+	using CitizenPtr = std::shared_ptr<Citizen>;
 
 	class Citizen {
+	public:
+		virtual float calculate_payment() const = 0;
+		virtual void print_citizen() const = 0;
 
+		virtual CitizenPtr clone() const = 0;
+		virtual bool equals(CitizenPtr other) const = 0;
+
+		virtual ~Citizen() = default;
+
+	protected:
+		Citizen() = default;
+		Citizen(const Citizen&) = default;
+		Citizen& operator=(const Citizen&) = default;
+	};
+
+	class CitizenKid : public Citizen {
 	private:
-		Type _type;
-		string Name;
-		string Organization;
+		std::string Name;
+		std::string Organization;
 		int Number;
-		int SNILS;
-		float AveRating;
-		int Exp;
 		bool LargeFamily;
-		float Payment;
 
 	public:
-		Citizen(Type type, string Name, string Organization, int Number, bool LargeFamily);
-		Citizen(Type type, string Name, string Organization, int Number, float AveRating);
-		Citizen(Type type, string Name, int SNILS, int Exp);
-		Citizen(Type type, string name, float payment);
+		CitizenKid(std::string name, std::string org, int num, bool lf);
+		std::string get_name() const;
+		std::string get_org() const;
+		int get_num() const;
+		bool get_lf() const;
 
-		void set_type(Type type);
-		void set_name(string name);
-		void set_org(string org);
-		void set_number(int number);
-		void set_family(bool lf);
-		void set_rating(float ar);
-		void set_exp(int exp);
-		void set_snils(int snils);
-		void set_payment(float payment);
+		float calculate_payment() const override;
+		void print_citizen() const override;
+		CitizenPtr clone() const override;
+		bool equals(CitizenPtr other) const override;
+	};
 
-		float get_payment() const;
-		string get_name() const;
-		string get_org() const;
-		int get_number() const;
-		Type get_type() const;
-		bool get_family() const;
+	class CitizenStudent : public Citizen {
+
+	private:
+		std::string Name;
+		std::string Organization;
+		int Number;
+		float AveRating;
+
+	public:
+		CitizenStudent(std::string name, std::string org, int num, float ar);
+		std::string get_name() const;
+		std::string get_org() const;
+		int get_num() const;
 		float get_rating() const;
+
+		float calculate_payment() const override;
+		void print_citizen() const override;
+		CitizenPtr clone() const override;
+		bool equals(CitizenPtr other) const override;
+	};
+
+	class CitizenOldman : public Citizen {
+
+	private:
+		std::string Name;
+		int Snils;
+		int Exp;
+
+	public:
+		CitizenOldman(std::string name, int snils, int exp);
+		std::string get_name() const;
 		int get_snils() const;
 		int get_exp() const;
 
-		static CitizenPtr create_kid(string name, string org, int number, bool lf);
-		static CitizenPtr create_student(string name, string org, int number, float ar);
-		static CitizenPtr create_oldman(string name, int snils, int exp);
-		float calculate_payment() const;
-
-		CitizenPtr clone() const;
+		float calculate_payment() const override;
+		void print_citizen() const override;
+		CitizenPtr clone() const override;
+		bool equals(CitizenPtr other) const override;
 	};
 
-	void printf(Citizen c);
-
-	bool operator==(const Citizen& lhs, const Citizen& rhs);
-	bool operator!=(const Citizen& lhs, const Citizen& rhs);
-
 	class CitizenList {
-
 	private:
-		CitizenPtr* ptr;
-		int _size;
+		std::vector<CitizenPtr> citizens;
 
 	public:
-		CitizenList();
+		CitizenList() = default;
+
 		CitizenList(const CitizenList& other);
+
+		CitizenList& operator=(const CitizenList& rhs);
 
 		int size() const;
 
-		CitizenList& operator=(const CitizenList& rhs);
 		CitizenPtr operator[](int index) const;
 
-		void add(CitizenPtr const c);
-		void insert(CitizenPtr const c, int index);
-		void delete_citizen(int index);
-		void replace(CitizenPtr const c, int index);
+		void add(CitizenPtr c);
+		void insert(CitizenPtr c, int index);
+		void set(CitizenPtr c, int index);
+		void remove(int index);
 
 		void show();
 		void swap(CitizenList& other);
-		float max_value();
-
-		~CitizenList();
 	};
 
-};
-
+	int index_of_max_value(const CitizenList& citizens);
+}
